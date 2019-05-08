@@ -1,2 +1,6 @@
 **/.DS_Store
 src/Data_manager_split_datasets/
+
+*.pyc
+
+src/\.ipynb_checkpoints/
