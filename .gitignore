@@ -1,2 +1,7 @@
+**/.DS_Store
+src/Data_manager_split_datasets/
+src/Notebooks/Data_manager_split_datasets/
 
-help/\.DS_Store
+*.pyc
+
+src/\.ipynb_checkpoints/
