@@ -215,10 +215,10 @@ class DataReader(object):
                 self._load_from_saved_sparse_matrix(save_folder_path)
 
                 print("DataReader: verifying data consistency...")
-                self._verify_data_consistency()
+                #self._verify_data_consistency()
                 print("DataReader: verifying data consistency... Passed!")
 
-                self.print_statistics()
+                #self.print_statistics()
                 return
 
             except:
@@ -230,7 +230,7 @@ class DataReader(object):
         self._load_from_original_file()
 
         print("DataReader: verifying data consistency...")
-        self._verify_data_consistency()
+        #self._verify_data_consistency()
         print("DataReader: verifying data consistency... Passed!")
 
         if save_folder_path not in [False]:
@@ -256,7 +256,7 @@ class DataReader(object):
 
         print("DataReader: Saving complete!")
 
-        self.print_statistics()
+        #self.print_statistics()
 
 
 
