@@ -102,7 +102,17 @@ class URM5Fold_WarmCold_Splitter(DataSplitter):
 
     def get_statistics_ICM(self):
 
-        print("No ICM here!!")
+        for ICM_name in self.dataReader_object.get_loaded_ICM_names():
+
+            ICM_object = getattr(self, ICM_name)
+            n_items = ICM_object.shape[0]
+            n_features = ICM_object.shape[1]
+
+            print("\t Statistics for {}: n_features {}, feature occurrences {}, density: {:.2E}".format(
+                ICM_name, n_features, ICM_object.nnz, ICM_object.nnz/(int(n_items)*int(n_features))
+            ))
+
+        print("\n")
 
 
 
@@ -179,6 +189,19 @@ class URM5Fold_WarmCold_Splitter(DataSplitter):
                     open(save_folder_path + "URM_{}_fold_split".format(self.n_folds), "wb"),
                     protocol=pickle.HIGHEST_PROTOCOL)
 
+        for ICM_name in self.dataReader_object.get_loaded_ICM_names():
+
+            print("ICM to be saved:")
+            print(ICM_name)
+
+            pickle.dump(self.dataReader_object.get_ICM_from_name(ICM_name),
+                        open(save_folder_path + "{}".format(ICM_name), "wb"),
+                        protocol=pickle.HIGHEST_PROTOCOL)
+
+            pickle.dump(self.dataReader_object.get_ICM_feature_to_index_mapper_from_name(ICM_name),
+                        open(save_folder_path + "tokenToFeatureMapper_{}".format(ICM_name), "wb"),
+                        protocol=pickle.HIGHEST_PROTOCOL)
+
         print("URM5Fold_WarmCold_Splitter: Split complete")
 
 
@@ -193,6 +216,12 @@ class URM5Fold_WarmCold_Splitter(DataSplitter):
 
         for attrib_name in data_dict.keys():
              self.__setattr__(attrib_name, data_dict[attrib_name])
+
+
+        for ICM_name in self.dataReader_object.get_loaded_ICM_names():
+
+            ICM_object = pickle.load(open(save_folder_path + "{}".format(ICM_name), "rb"))
+            self.__setattr__(ICM_name, ICM_object)
 
 
     def __iter__(self):
