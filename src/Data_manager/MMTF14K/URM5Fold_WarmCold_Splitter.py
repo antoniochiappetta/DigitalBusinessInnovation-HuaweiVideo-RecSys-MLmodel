@@ -124,8 +124,8 @@ class URM5Fold_WarmCold_Splitter(DataSplitter):
         """
 
 
-        URM_test = self.fold_split[n_test_fold]["URM_test"].copy()
-        URM_train = self.fold_split[n_test_fold]["URM_train"].copy()
+        URM_test = self.fold_split[n_test_fold-1]["URM_test"].copy()
+        URM_train = self.fold_split[n_test_fold-1]["URM_train"].copy()
 
         return URM_train, URM_test
 

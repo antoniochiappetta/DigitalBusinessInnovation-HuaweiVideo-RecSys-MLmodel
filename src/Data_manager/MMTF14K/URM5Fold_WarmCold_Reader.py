@@ -164,6 +164,7 @@ class URM5Fold_WarmCold_Reader(DataReader):
 
         if header:
             headerLine = fileHandle.readline()
+            headerLine = headerLine.split(separator)
 
         for line in fileHandle:
             numCells += 1
@@ -178,9 +179,9 @@ class URM5Fold_WarmCold_Reader(DataReader):
                 featureList = []
                 featureValues = []
                 for col in range(1,len(line)):
-                    featureList.append(headerLine[col])
-                    featureValues.append(line[col])
-                
+                    featureList.append(headerLine[col].replace("\n", ""))
+                    featureValues.append(line[col].replace("\n", ""))
+                        
                 # Rows movie ID
                 # Cols features
                 ICM_builder.add_data_lists(row_list_to_add = [movie_id]*len(featureList), col_list_to_add = featureList, data_list_to_add = featureValues)
