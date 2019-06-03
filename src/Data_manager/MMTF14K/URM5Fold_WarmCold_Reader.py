@@ -18,10 +18,10 @@ from Data_manager.DataReader_utils import downloadFromURL
 class URM5Fold_WarmCold_Reader(DataReader):
 
     DATASET_SUBFOLDER_URM = "MMTF14K/Final_MMTF14K_Web/Data/"
-    DATASET_SUBFOLDER_ICM = "MMTF14K/FInal_MMTF14K_Web/Audio/"
+    DATASET_SUBFOLDER_ICM = "MMTF14K/Final_MMTF14K_Web"
 
     AVAILABLE_URMS = ["URM_train_1","URM_train_2","URM_train_3","URM_train_4","URM_train_5","URM_test_1","URM_test_2","URM_test_3","URM_test_4","URM_test_5"]
-    AVAILABLE_ICM = ["ICM_1","ICM_2","ICM_3","ICM_4","ICM_5"]
+    AVAILABLE_ICM = ["ICM_genre","ICM_year","ICM_AVF","ICM_deep","ICM_BLF","ICM_ivector_1","ICM_ivector_2","ICM_ivector_3","ICM_ivector_4","ICM_ivector_5"]
 
     IS_IMPLICIT = True
 
@@ -41,34 +41,61 @@ class URM5Fold_WarmCold_Reader(DataReader):
 
     def _load_from_original_file(self):
 
-        # TODO Choose hyperparams i-vector: UBM with either 256 or 512 Gaussian components and a different dimensionality of latent factors (40, 100, 200, 400).
         # ICM
 
         print("URM5Fold_WarmCold_Reader: Loading original data ICM")
 
         zipFile_path_ICM = self.DATASET_SPLIT_ROOT_FOLDER + self.DATASET_SUBFOLDER_ICM
 
-        dataFile_ICM = zipfile.ZipFile(zipFile_path_ICM + "ivector_features.zip")
+        dataFile_ICM = zipfile.ZipFile(zipFile_path_ICM + ".zip")
 
-        ICM_1_path = dataFile_ICM.extract("ivector_features/IVec_splitItem_fold_1_gmm_512_tvDim_100.csv", path=zipFile_path_ICM + "decompressed")
-        ICM_2_path = dataFile_ICM.extract("ivector_features/IVec_splitItem_fold_2_gmm_512_tvDim_100.csv", path=zipFile_path_ICM + "decompressed")
-        ICM_3_path = dataFile_ICM.extract("ivector_features/IVec_splitItem_fold_3_gmm_512_tvDim_100.csv", path=zipFile_path_ICM + "decompressed")
-        ICM_4_path = dataFile_ICM.extract("ivector_features/IVec_splitItem_fold_4_gmm_512_tvDim_100.csv", path=zipFile_path_ICM + "decompressed")
-        ICM_5_path = dataFile_ICM.extract("ivector_features/IVec_splitItem_fold_5_gmm_512_tvDim_100.csv", path=zipFile_path_ICM + "decompressed")
+        # METADATA
+        print("Generating ICMs for Metadata features")
 
-        print("URM5Fold_WarmCold_Reader: loading ICM")
+        ICM_genre_path = dataFile_ICM.extract("Final_MMTF14K_Web/Metadata/GenreFeatures.csv", path=zipFile_path_ICM + "decompressed")
+        ICM_year_path = dataFile_ICM.extract("Final_MMTF14K_Web/Metadata/YearOfProd.csv", path=zipFile_path_ICM + "decompressed")
 
-        self.tokenToFeatureMapper_ICM_1 = {}
-        self.tokenToFeatureMapper_ICM_2 = {}
-        self.tokenToFeatureMapper_ICM_3 = {}
-        self.tokenToFeatureMapper_ICM_4 = {}
-        self.tokenToFeatureMapper_ICM_5 = {}
+        self.tokenToFeatureMapper_ICM_genre = {}
+        self.tokenToFeatureMapper_ICM_year = {}
 
-        self.ICM_1, self.tokenToFeatureMapper_ICM_1, self.item_original_ID_to_index_1 = self._loadICM(ICM_1_path, header=True, separator=',')
-        self.ICM_2, self.tokenToFeatureMapper_ICM_2, self.item_original_ID_to_index_2 = self._loadICM(ICM_2_path, header=True, separator=',')
-        self.ICM_3, self.tokenToFeatureMapper_ICM_3, self.item_original_ID_to_index_3 = self._loadICM(ICM_3_path, header=True, separator=',')
-        self.ICM_4, self.tokenToFeatureMapper_ICM_4, self.item_original_ID_to_index_4 = self._loadICM(ICM_4_path, header=True, separator=',')
-        self.ICM_5, self.tokenToFeatureMapper_ICM_5, self.item_original_ID_to_index_5 = self._loadICM(ICM_5_path, header=True, separator=',')
+        self.ICM_genre, self.tokenToFeatureMapper_ICM_genre, _ = self._loadICM(ICM_genre_path, header=True, separator=",")
+        self.ICM_year, self.tokenToFeatureMapper_ICM_year, _ = self._loadICM(ICM_year_path, header=True, separator=",")
+
+        # AUDIO
+        print("Generating ICMs for Audio features")
+
+        ICM_BLF_path = dataFile_ICM.extract("Final_MMTF14K_Web/Audio/BLF/All/blf_sim_matrix.csv", path=zipFile_path_ICM + "decompressed")
+        ICM_ivector_1_path = dataFile_ICM.extract("Final_MMTF14K_Web/Audio/ivector_features/IVec_splitItem_fold_1_gmm_512_tvDim_100.csv", path=zipFile_path_ICM + "decompressed")
+        ICM_ivector_2_path = dataFile_ICM.extract("Final_MMTF14K_Web/Audio/ivector_features/IVec_splitItem_fold_2_gmm_512_tvDim_100.csv", path=zipFile_path_ICM + "decompressed")
+        ICM_ivector_3_path = dataFile_ICM.extract("Final_MMTF14K_Web/Audio/ivector_features/IVec_splitItem_fold_3_gmm_512_tvDim_100.csv", path=zipFile_path_ICM + "decompressed")
+        ICM_ivector_4_path = dataFile_ICM.extract("Final_MMTF14K_Web/Audio/ivector_features/IVec_splitItem_fold_4_gmm_512_tvDim_100.csv", path=zipFile_path_ICM + "decompressed")
+        ICM_ivector_5_path = dataFile_ICM.extract("Final_MMTF14K_Web/Audio/ivector_features/IVec_splitItem_fold_5_gmm_512_tvDim_100.csv", path=zipFile_path_ICM + "decompressed")
+
+        self.tokenToFeatureMapper_ICM_BLF = {}
+        self.tokenToFeatureMapper_ICM_ivector_1 = {}
+        self.tokenToFeatureMapper_ICM_ivector_2 = {}
+        self.tokenToFeatureMapper_ICM_ivector_3 = {}
+        self.tokenToFeatureMapper_ICM_ivector_4 = {}
+        self.tokenToFeatureMapper_ICM_ivector_5 = {}
+
+        self.ICM_BLF, self.tokenToFeatureMapper_ICM_BLF, _ = self._loadICM(ICM_BLF_path, header=True, separator=",")
+        self.ICM_ivector_1, self.tokenToFeatureMapper_ICM_ivector_1, self.item_original_ID_to_index_1 = self._loadICM(ICM_ivector_1_path, header=True, separator=",")
+        self.ICM_ivector_2, self.tokenToFeatureMapper_ICM_ivector_2, self.item_original_ID_to_index_2 = self._loadICM(ICM_ivector_2_path, header=True, separator=",")
+        self.ICM_ivector_3, self.tokenToFeatureMapper_ICM_ivector_3, self.item_original_ID_to_index_3 = self._loadICM(ICM_ivector_3_path, header=True, separator=",")
+        self.ICM_ivector_4, self.tokenToFeatureMapper_ICM_ivector_4, self.item_original_ID_to_index_4 = self._loadICM(ICM_ivector_4_path, header=True, separator=",")
+        self.ICM_ivector_5, self.tokenToFeatureMapper_ICM_ivector_5, self.item_original_ID_to_index_5 = self._loadICM(ICM_ivector_5_path, header=True, separator=",")
+
+        # VISUAL
+        print("Generating ICMs for Visual features")
+        
+        ICM_AVF_path = dataFile_ICM.extract("Final_MMTF14K_Web/Visual/Aesthetic_features/Avg/AestheticFeatures-AVG-All.csv", path=zipFile_path_ICM + "decompressed")
+        ICM_deep_path = dataFile_ICM.extract("Final_MMTF14K_Web/Visual/AlexNet_features/Avg/AlexNetFeatures -AVG-fc7.csv", path=zipFile_path_ICM + "decompressed")
+        
+        self.tokenToFeatureMapper_ICM_AVF = {}
+        self.tokenToFeatureMapper_ICM_deep = {}
+
+        self.ICM_AVF, self.tokenToFeatureMapper_ICM_AVF, _ = self._loadICM(ICM_AVF_path, header=True, separator=",")
+        self.ICM_deep, self.tokenToFeatureMapper_ICM_deep, _ = self._loadICM(ICM_deep_path, header=True, separator=",")
 
         print("URM5Fold_WarmCold_Reader: cleaning temporary files ICM")
 
