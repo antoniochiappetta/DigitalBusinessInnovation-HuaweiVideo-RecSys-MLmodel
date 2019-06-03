@@ -21,7 +21,7 @@ class URM5Fold_WarmCold_Reader(DataReader):
     DATASET_SUBFOLDER_ICM = "MMTF14K/Final_MMTF14K_Web"
 
     AVAILABLE_URMS = ["URM_train_1","URM_train_2","URM_train_3","URM_train_4","URM_train_5","URM_test_1","URM_test_2","URM_test_3","URM_test_4","URM_test_5"]
-    AVAILABLE_ICM = ["ICM_genre","ICM_year","ICM_AVF","ICM_deep","ICM_BLF","ICM_ivector_1","ICM_ivector_2","ICM_ivector_3","ICM_ivector_4","ICM_ivector_5"]
+    AVAILABLE_ICM = ["ICM_genre","ICM_year","ICM_AVF","ICM_deep","ICM_ivector_1","ICM_ivector_2","ICM_ivector_3","ICM_ivector_4","ICM_ivector_5"]
 
     IS_IMPLICIT = True
 
@@ -64,12 +64,12 @@ class URM5Fold_WarmCold_Reader(DataReader):
         # AUDIO
         print("Generating ICMs for Audio features")
 
-        ICM_BLF_path = dataFile_ICM.extract("Final_MMTF14K_Web/Audio/BLF/All/blf_sim_matrix.csv", path=zipFile_path_ICM + "decompressed")
-        ICM_ivector_1_path = dataFile_ICM.extract("Final_MMTF14K_Web/Audio/ivector_features/IVec_splitItem_fold_1_gmm_512_tvDim_100.csv", path=zipFile_path_ICM + "decompressed")
-        ICM_ivector_2_path = dataFile_ICM.extract("Final_MMTF14K_Web/Audio/ivector_features/IVec_splitItem_fold_2_gmm_512_tvDim_100.csv", path=zipFile_path_ICM + "decompressed")
-        ICM_ivector_3_path = dataFile_ICM.extract("Final_MMTF14K_Web/Audio/ivector_features/IVec_splitItem_fold_3_gmm_512_tvDim_100.csv", path=zipFile_path_ICM + "decompressed")
-        ICM_ivector_4_path = dataFile_ICM.extract("Final_MMTF14K_Web/Audio/ivector_features/IVec_splitItem_fold_4_gmm_512_tvDim_100.csv", path=zipFile_path_ICM + "decompressed")
-        ICM_ivector_5_path = dataFile_ICM.extract("Final_MMTF14K_Web/Audio/ivector_features/IVec_splitItem_fold_5_gmm_512_tvDim_100.csv", path=zipFile_path_ICM + "decompressed")
+        # ICM_BLF_path = dataFile_ICM.extract("Final_MMTF14K_Web/Audio/BLF/All/blf_sim_matrix.csv", path=zipFile_path_ICM + "decompressed")
+        ICM_ivector_1_path = dataFile_ICM.extract("Final_MMTF14K_Web/Audio/ivector/IVec_splitItem_fold_1_gmm_512_tvDim_100.csv", path=zipFile_path_ICM + "decompressed")
+        ICM_ivector_2_path = dataFile_ICM.extract("Final_MMTF14K_Web/Audio/ivector/IVec_splitItem_fold_2_gmm_512_tvDim_100.csv", path=zipFile_path_ICM + "decompressed")
+        ICM_ivector_3_path = dataFile_ICM.extract("Final_MMTF14K_Web/Audio/ivector/IVec_splitItem_fold_3_gmm_512_tvDim_100.csv", path=zipFile_path_ICM + "decompressed")
+        ICM_ivector_4_path = dataFile_ICM.extract("Final_MMTF14K_Web/Audio/ivector/IVec_splitItem_fold_4_gmm_512_tvDim_100.csv", path=zipFile_path_ICM + "decompressed")
+        ICM_ivector_5_path = dataFile_ICM.extract("Final_MMTF14K_Web/Audio/ivector/IVec_splitItem_fold_5_gmm_512_tvDim_100.csv", path=zipFile_path_ICM + "decompressed")
 
         self.tokenToFeatureMapper_ICM_BLF = {}
         self.tokenToFeatureMapper_ICM_ivector_1 = {}
@@ -78,7 +78,7 @@ class URM5Fold_WarmCold_Reader(DataReader):
         self.tokenToFeatureMapper_ICM_ivector_4 = {}
         self.tokenToFeatureMapper_ICM_ivector_5 = {}
 
-        self.ICM_BLF, self.tokenToFeatureMapper_ICM_BLF, _ = self._loadICM(ICM_BLF_path, header=True, separator=",")
+        # self.ICM_BLF, self.tokenToFeatureMapper_ICM_BLF, _ = self._loadICM(ICM_BLF_path, header=True, separator=",")
         self.ICM_ivector_1, self.tokenToFeatureMapper_ICM_ivector_1, self.item_original_ID_to_index_1 = self._loadICM(ICM_ivector_1_path, header=True, separator=",")
         self.ICM_ivector_2, self.tokenToFeatureMapper_ICM_ivector_2, self.item_original_ID_to_index_2 = self._loadICM(ICM_ivector_2_path, header=True, separator=",")
         self.ICM_ivector_3, self.tokenToFeatureMapper_ICM_ivector_3, self.item_original_ID_to_index_3 = self._loadICM(ICM_ivector_3_path, header=True, separator=",")
