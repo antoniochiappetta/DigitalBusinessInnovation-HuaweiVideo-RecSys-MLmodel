@@ -5,3 +5,5 @@ src/Notebooks/Data_manager_split_datasets/
 *.pyc
 
 src/\.ipynb_checkpoints/
+
+\.vscode/
